@@ -11,7 +11,7 @@ typedef struct{
 
 struct elemento{
     num n;
-    struct elemento *e;
+    struct elemento *next;
 };
 
 int main()
@@ -38,13 +38,11 @@ int main()
 }
 
 struct elemento *inserisci(struct elemento *p) {
-    struct elemento *punt, *lista = p;  //punt è usato come appoggio, lista invece è usato per restituire la lista
-    int a, scelta;                      //completa quando si sceglie di inserire l'elemento alla fine.
+    struct elemento *punt, *lista = p, *temp;  //punt è usato come appoggio, lista invece è usato per restituire la lista
+    int a = 0, scelta;                      //completa quando si sceglie di inserire l'elemento alla fine.
 
 
     if(p != NULL) {
-        printf("Dove vuoi inserire l'elemento?\n1) Inizio;\n2) Fine.\nInserisci scelta: ");
-        scanf("%d", &scelta);
         printf("Inserisci numero: ");
         scanf("%d", &a);
         printf("\n");
@@ -53,16 +51,18 @@ struct elemento *inserisci(struct elemento *p) {
         // Alloco la memoria necessaria
         punt = (struct elemento *)malloc(sizeof(struct elemento));
         punt->n.numero = a;
-        if(scelta == 1) {
-            punt->e = p;
+
+        if(p->n.numero > a) {
+            punt->next = p;
+            return(punt);
         }
         else {
-            while(p->e != NULL)
-                p = p->e;
-            punt->e = NULL;
-            p->e = punt;
-            return(lista);
+            while(p->next != NULL && p->next->n.numero < a)
+                p = p->next;
+            punt->next = p->next;
+            p->next = punt;
         }
+        return(lista);
     }
     else {
         printf("Inserisci numero: ");
@@ -72,7 +72,7 @@ struct elemento *inserisci(struct elemento *p) {
          // Alloco la memoria necessaria
          punt = (struct elemento *)malloc(sizeof(struct elemento));
          punt->n.numero = a;
-         punt->e = NULL;
+         punt->next = NULL;
     }
 
     return(punt);
@@ -87,18 +87,18 @@ struct elemento *elimina(struct elemento *p) {
     if(p == NULL)
         printf("Lista vuota\n");
     else if(p->n.numero == i){
-        lista = p->e;
+        lista = p->next;
         printf("Elemento rimosso!\n");
     }
     else{
         while(p != NULL){
-            if(p->e != NULL && p->e->n.numero == i)
+            if(p->next != NULL && p->next->n.numero == i)
                 break;
-            p = p->e;
+            p = p->next;
         }
 
         if(p != NULL) {
-            p->e = p->e->e;
+            p->next = p->next->next;
             printf("Elemento rimosso!\n");
         }
         else
@@ -114,7 +114,7 @@ void stampa(struct elemento *p) {
     if(p != NULL) {
         while(p != NULL) {
             printf("%d' elemento: %d\n", conta, p->n.numero);
-            p = p->e;
+            p = p->next;
             conta++;
         }
     }
