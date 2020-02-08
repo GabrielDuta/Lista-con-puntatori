@@ -16,19 +16,19 @@ struct elemento{
 
 int main()
 {
-    struct elemento *lista = NULL;
-    int scelta;
+    struct elemento *inizioLista = NULL; //il puntatore ad inizio lista; all'inizio è NULL ma poi quando viene inizializzato punta al primo elemento della lista
+    int scelta;                         //per questo motivo ma sempre aggiornato.
 
     do{
         printf("Scegli opzione:\n1) Aggiungi numero;\n2) Elimina elemento;\n3) Stampa;\n4) Esci.\nInserisci scelta: ");
         scanf("%d", &scelta);
         printf("\n");
         switch(scelta) {
-            case 1: lista = inserisci(lista);
+            case 1: inizioLista = inserisci(inizioLista);
                 break;
-            case 2: lista = elimina(lista);
+            case 2: inizioLista = elimina(inizioLista);
                 break;
-            case 3: stampa(lista);
+            case 3: stampa(inizioLista);
                 break;
             default: break;
         }
@@ -38,7 +38,7 @@ int main()
 }
 
 struct elemento *inserisci(struct elemento *p) {
-    struct elemento *punt, *lista = p, *temp;  //punt è usato come appoggio, lista invece è usato per restituire la lista
+    struct elemento *puntTemporaneo, *lista = p, *temp;  //puntTemporaneo è usato come appoggio, lista invece è usato per restituire la lista
     int a = 0, scelta;                      //completa quando si sceglie di inserire l'elemento alla fine.
 
 
@@ -49,33 +49,33 @@ struct elemento *inserisci(struct elemento *p) {
 
         /* creazione elementi successivi*/
         // Alloco la memoria necessaria
-        punt = (struct elemento *)malloc(sizeof(struct elemento));
-        punt->n.numero = a;
+        puntTemporaneo = (struct elemento *)malloc(sizeof(struct elemento));
+        puntTemporaneo->n.numero = a;
 
-        if(p->n.numero > a) {
-            punt->next = p;
-            return(punt);
+        if(p->n.numero > a) { // modifica il primo elemento, serve un caso speciale perchè viene semplicemente modificato il next di puntTemporaneo
+            puntTemporaneo->next = p;
+            return(puntTemporaneo);//viene restituito questo perchè è il nuovo primo elemento e quindi il puntatore inizioLista deve essere aggiornato
         }
         else {
-            while(p->next != NULL && p->next->n.numero < a)
+            while(p->next != NULL && p->next->n.numero < a) //fa scorrere la lista fino a trovare un elemento minore
                 p = p->next;
-            punt->next = p->next;
-            p->next = punt;
+            puntTemporaneo->next = p->next;
+            p->next = puntTemporaneo;
+            return(lista); //restituisce 'lista' che punta all'inizio della lista e quindi non modifica il puntatore nel main
         }
-        return(lista);
     }
-    else {
+    else { //inizializza la lista
         printf("Inserisci numero: ");
         scanf("%d", &a);
         printf("\n");
          /* creazione primo elemento */
          // Alloco la memoria necessaria
-         punt = (struct elemento *)malloc(sizeof(struct elemento));
-         punt->n.numero = a;
-         punt->next = NULL;
+         puntTemporaneo = (struct elemento *)malloc(sizeof(struct elemento));
+         puntTemporaneo->n.numero = a;
+         puntTemporaneo->next = NULL;
     }
 
-    return(punt);
+    return(puntTemporaneo);
 }
 
 struct elemento *elimina(struct elemento *p) {
@@ -110,7 +110,6 @@ struct elemento *elimina(struct elemento *p) {
 
 void stampa(struct elemento *p) {
     int conta = 1;
-    char invio;
     if(p != NULL) {
         while(p != NULL) {
             printf("%d' elemento: %d\n", conta, p->n.numero);
