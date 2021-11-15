@@ -16,7 +16,7 @@ struct elemento{
 
 int main()
 {
-    struct elemento *inizioLista = NULL; //il puntatore ad inizio lista; all'inizio è NULL ma poi quando viene inizializzato punta al primo elemento della lista
+    struct elemento *inizioLista = NULL; //il puntatore ad inizio lista; all'inizio Ã¨ NULL ma poi quando viene inizializzato punta al primo elemento della lista
     int scelta;                         //per questo motivo ma sempre aggiornato.
 
     do{
@@ -38,7 +38,7 @@ int main()
 }
 
 struct elemento *inserisci(struct elemento *p) {
-    struct elemento *puntTemporaneo, *lista = p, *temp;  //puntTemporaneo è usato come appoggio, lista invece è usato per restituire la lista
+    struct elemento *puntTemporaneo, *lista = p, *temp;  //puntTemporaneo Ã¨ usato come appoggio, lista invece Ã¨ usato per restituire la lista
     int a = 0, scelta;                      //completa quando si sceglie di inserire l'elemento alla fine.
 
 
@@ -51,10 +51,11 @@ struct elemento *inserisci(struct elemento *p) {
         // Alloco la memoria necessaria
         puntTemporaneo = (struct elemento *)malloc(sizeof(struct elemento));
         puntTemporaneo->n.numero = a;
+        puntTemporaneo->next = NULL;
 
-        if(p->n.numero > a) { // modifica il primo elemento, serve un caso speciale perchè viene semplicemente modificato il next di puntTemporaneo
+        if(p->n.numero > a) { // modifica il primo elemento, serve un caso speciale perchÃ¨ viene semplicemente modificato il next di puntTemporaneo
             puntTemporaneo->next = p;
-            return(puntTemporaneo);//viene restituito questo perchè è il nuovo primo elemento e quindi il puntatore inizioLista deve essere aggiornato
+            return(puntTemporaneo);//viene restituito questo perchÃ¨ Ã¨ il nuovo primo elemento e quindi il puntatore inizioLista deve essere aggiornato
         }
         else {
             while(p->next != NULL && p->next->n.numero < a) //fa scorrere la lista fino a trovare un elemento minore
